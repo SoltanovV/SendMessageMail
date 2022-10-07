@@ -1,12 +1,6 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Client;
-using Microsoft.VisualBasic;
-using static Org.BouncyCastle.Math.EC.ECCurve;
-
-namespace SendMessageEmail.Services
+﻿namespace SendMessageEmail.Services
 {
+    // Реализация интерфейса 
     public class MessageServices: IMessageServices
     {
         private IConfiguration _configuration;
@@ -19,6 +13,7 @@ namespace SendMessageEmail.Services
             _db = db;
             _loggerDb = loggerDb;
         }
+        // Реализация метода SendMessageAsync
         public async Task<MailMessage> SendMessageAsync(Message model)
         {
             try
@@ -59,16 +54,16 @@ namespace SendMessageEmail.Services
                     await client.DisconnectAsync(true);
 
                 }
+                // Сервис для добавление данных в БД
                 var result = await _loggerDb.LogerDb(model);
-
-
 
                 return result;
             }
             catch(Exception ex)
             {
+                // Сервис для добавление данных в БД
                 var result = await _loggerDb.LogerDb(model, ex);
-               return result;
+                return result;
 
             }
 

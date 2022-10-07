@@ -8,7 +8,7 @@
         {
             _db = db;
         }
-
+        // Метод для проверки ошибок при отправке
         public async Task<MailMessage> LogerDb(Message model, Exception ex = null)
         {
            
@@ -49,11 +49,8 @@
             }
             catch (Exception)
             {
-
                 throw;
             }
-            
-           
         }
     }
 }

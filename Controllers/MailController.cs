@@ -16,14 +16,17 @@ namespace SendMessageEmail.Controllers
         }
         [HttpPost]
         [Route("api/mails")]
-        public async Task<IActionResult> SendMessage(Message model)
+        // Полученние данных с клиента  
+        public async Task<IActionResult> SendMessage([FromBody]Message model)
         {
             try
             {
                 _logger.LogInformation("Запрос SendMessage получен");
 
+                // передача данных в сервис
                 var result = await _sendMess.SendMessageAsync(model);
 
+                _logger.LogInformation("Запрос SendMessage выполнен");
                 return Ok(result);
             }
             catch (Exception ex)
@@ -34,15 +37,17 @@ namespace SendMessageEmail.Controllers
         }
         [HttpGet]
         [Route("api/mails")]
+        // api для получения списка отправленных запросов
         public async Task<IActionResult> GetMessage()
         {
             try
             {
                 _logger.LogInformation("Запрос GetMessage получен");
-
+                // Получение списка
                 var result = _db.Mail.Include(m => m.MessageStatus);
 
                 _logger.LogInformation("Запрос GetMessage выполнен");
+
                 return Ok(result);
             }
             catch (Exception ex)

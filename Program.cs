@@ -15,21 +15,26 @@ builder.Services.AddMvc().AddJsonOptions(o => {
     o.JsonSerializerOptions.MaxDepth = 0;
 });
 
-
+// Настройка CORS
 builder.Services.AddCors(opions =>
 {
     opions.AddPolicy(name: "CorsPolicy", policy =>
     {
-        policy.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
 
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 
-
+// Сервис для отправки сообщений
 builder.Services.AddTransient<IMessageServices, MessageServices>();
+
+// Сервис для проверки на ошибки при отправке
 builder.Services.AddTransient<LoggerDbServices>();
+
+builder.Services.AddMvc();
 
 var app = builder.Build();
 
@@ -40,6 +45,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=View}/{action=Index}");
+});
+
+app.UseStaticFiles();
+
+// Использование Cors
 app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
