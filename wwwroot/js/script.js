@@ -2,7 +2,14 @@ const URL = 'https://localhost:7255/api/mails'
 
 const container = document.querySelector('table.listUrl');
 
+const email = document.querySelector('.email')
+const subject = document.querySelector('.subject')
+const messages = document.querySelector('.messages')
+const sendData = document.querySelector('.sendData')
+
+
 getData(URL)
+
 function getData(url){
     fetch(url)
         .then(res => {
@@ -10,7 +17,6 @@ function getData(url){
     })
         .then((data) => {
             data.map((p) => {
-                //console.log(p)
                 let createTable = document.createElement('tr')
                 let recepient = document.createElement('td')
                 let subject = document.createElement('td')
@@ -29,6 +35,8 @@ function getData(url){
                 senddateTime.textContent = p.senddateTime
 
                 messageStatuses.textContent = p.messageStatus.result
+
+                // Проверка на статус Failed
                 if (p.messageStatus.result === 'Failed'){
                     messageStatuses.style.backgroundColor = 'red'
                 }
@@ -38,7 +46,6 @@ function getData(url){
 
                 log.textContent = p.messageStatus.log
 
-                //messageStatuses.textContent = p.messageStatus.map((s) => {s.result})
                 if (container){
                     container.appendChild(createTable)
                 }
@@ -46,11 +53,8 @@ function getData(url){
             })
         })
 }
-const email = document.querySelector('.email')
-const subject = document.querySelector('.subject')
-const messages = document.querySelector('.messages')
-const sendData = document.querySelector('.sendData')
 
+// Отправка данных на свервер
 if(sendData){
     sendData.addEventListener('click', () => {
         let body = {
@@ -58,7 +62,6 @@ if(sendData){
             Subject: subject.value,
             Messages: messages.value
         }
-        console.log(body)
         fetch(URL, {
             method: 'POST',
             headers: {
